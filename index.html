@@ -1,0 +1,1154 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trixia's Bakery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body { 
+            font-family: 'Georgia', serif; 
+            margin: 0; 
+            padding: 0; 
+            background: linear-gradient(135deg, #f8f4f0 0%, #e8ddd4 100%);
+            min-height: 100vh;
+        }
+        
+        header { 
+            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+            color: white; 
+            text-align: center; 
+            padding: 2rem; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-weight: bold;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            font-style: italic;
+            opacity: 0.9;
+        }
+        
+        .cart-header {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .cart-header button {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .cart-header button:hover {
+            background: white;
+            color: #8e44ad;
+            transform: scale(1.1);
+        }
+        
+        #cartCount {
+            background: #00b894;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 50%;
+            font-weight: bold;
+            min-width: 25px;
+            text-align: center;
+        }
+        
+        .nav { 
+            list-style-type: none; 
+            padding: 0; 
+            display: flex; 
+            justify-content: center; 
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .nav-tab { 
+            padding: 1.2rem 2rem; 
+            cursor: pointer; 
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .nav-tab:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+        
+        .nav-tab.active { 
+            background: rgba(255,255,255,0.3);
+            border-bottom: 3px solid white;
+        }
+        
+        .content-section { 
+            display: none; 
+            padding: 3rem; 
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .content-section.active { 
+            display: block; 
+        }
+        
+        .menu-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 2rem; 
+            margin-top: 2rem;
+        }
+        
+        .menu-item { 
+            background: white; 
+            padding: 1.5rem; 
+            border-radius: 15px; 
+            text-align: center; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border-color: #9b59b6;
+        }
+        
+        .menu-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+        
+        .menu-item h3 {
+            color: #2d3436;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .menu-item .price {
+            color: #00b894;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .menu-item button {
+            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .menu-item button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(142,68,173,0.4);
+        }
+        
+        .cart-sidebar { 
+            position: fixed; 
+            right: -350px; 
+            top: 0; 
+            width: 350px; 
+            height: 100%; 
+            background: white; 
+            box-shadow: -5px 0 25px rgba(0,0,0,0.3); 
+            transition: right 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .cart-sidebar.open { 
+            right: 0; 
+        }
+        
+        .cart-content { 
+            padding: 2rem; 
+            height: 100%;
+            overflow-y: auto;
+        }
+        
+        .cart-content h2 {
+            color: #2d3436;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            border-bottom: 2px solid #e17055;
+            padding-bottom: 1rem;
+        }
+        
+        .cart-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 1.5rem; 
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .cart-item button {
+            background: #d63031;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        #cartTotal {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #8e44ad;
+            text-align: center;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #f8f4f0;
+            border-radius: 10px;
+        }
+        
+        .checkout-btn {
+            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .checkout-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(142,68,173,0.4);
+        }
+        
+        #successMessage { 
+            display: none; 
+            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+            color: white;
+            padding: 2rem; 
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .guest-only, .admin-only, .logged-in-only { 
+            display: none; 
+        }
+        
+        form {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+        }
+        
+        form label {
+            display: block;
+            margin: 1rem 0 0.5rem 0;
+            color: #2d3436;
+            font-weight: bold;
+        }
+        
+        form input, form textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        form input:focus, form textarea:focus {
+            outline: none;
+            border-color: #9b59b6;
+        }
+        
+        form button {
+            background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        form button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(142,68,173,0.4);
+        }
+        
+        .section-title {
+            text-align: center;
+            color: #2d3436;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .order {
+            background: white;
+            margin: 1rem 0;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .admin-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .admin-buttons button {
+            background: linear-gradient(135deg, #6c5ce7 0%, #5f3dc4 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-buttons button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(108,92,231,0.4);
+        }
+
+        /* Responsive Design */
+        @media screen and (max-width: 768px) {
+            /* Mobile styles */
+            header {
+                padding: 1.5rem 1rem 1.5rem 1rem;
+                position: relative;
+                min-height: 120px;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+                padding-right: 80px;
+            }
+            
+            header p {
+                font-size: 1rem;
+                padding-right: 80px;
+            }
+            
+            .cart-header {
+                position: absolute;
+                top: 20px;
+                right: 15px;
+                z-index: 10;
+            }
+            
+            .cart-header button {
+                padding: 10px 12px;
+                font-size: 1.1rem;
+                min-width: 50px;
+                min-height: 40px;
+            }
+            
+            #cartCount {
+                min-width: 20px;
+                padding: 3px 6px;
+                font-size: 0.9rem;
+            }
+            
+            .nav {
+                flex-direction: column;
+                align-items: stretch;
+                overflow-x: auto;
+            }
+            
+            .nav-tab {
+                padding: 1rem;
+                width: 100%;
+                text-align: center;
+                border-bottom: 1px solid rgba(255,255,255,0.2);
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+            
+            .content-section {
+                padding: 1.5rem 1rem;
+                margin-top: 0;
+            }
+            
+            .menu-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                margin-top: 1rem;
+            }
+            
+            .menu-item {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+            
+            .menu-item img {
+                height: 180px;
+                width: 100%;
+                object-fit: cover;
+            }
+            
+            .cart-sidebar {
+                width: 90vw;
+                max-width: 350px;
+                right: calc(-90vw);
+                z-index: 1001;
+            }
+            
+            .cart-sidebar.open {
+                right: 0;
+                box-shadow: -5px 0 25px rgba(0,0,0,0.5);
+            }
+            
+            .section-title {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            form {
+                padding: 1.5rem 1rem;
+                margin: 1rem 0;
+            }
+            
+            .admin-buttons {
+                flex-direction: column;
+                gap: 0.5rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            /* Footer responsive */
+            footer {
+                margin-top: 2rem !important;
+                padding: 2rem 0 !important;
+            }
+            
+            footer div[style*="grid-template-columns"] {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+                padding: 0 1rem !important;
+            }
+            
+            /* Checkout specific mobile styles */
+            #checkoutItems {
+                margin-bottom: 1rem;
+                padding: 1rem;
+                background: #f8f9fa;
+                border-radius: 8px;
+            }
+            
+            #checkoutTotal {
+                font-size: 1.3rem;
+                font-weight: bold;
+                margin-bottom: 1.5rem;
+                text-align: center;
+                color: #8e44ad;
+            }
+        }
+        
+        @media screen and (min-width: 769px) and (max-width: 1024px) {
+            /* Tablet styles */
+            header {
+                padding: 2rem;
+                min-height: 140px;
+            }
+            
+            header h1 {
+                font-size: 2.5rem;
+                padding-right: 100px;
+            }
+            
+            header p {
+                padding-right: 100px;
+            }
+            
+            .cart-header {
+                top: 25px;
+                right: 25px;
+            }
+            
+            .nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-tab {
+                padding: 1rem 1.5rem;
+                flex: 0 1 auto;
+            }
+            
+            .content-section {
+                padding: 2rem;
+                max-width: 900px;
+                margin: 0 auto;
+            }
+            
+            .menu-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            
+            .menu-item img {
+                height: 200px;
+            }
+            
+            .cart-sidebar {
+                width: 380px;
+                right: -380px;
+            }
+            
+            /* Footer responsive for tablets */
+            footer div[style*="grid-template-columns"] {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 2rem !important;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            /* Small mobile styles */
+            header {
+                padding: 1rem 0.5rem;
+                min-height: 100px;
+            }
+            
+            header h1 {
+                font-size: 1.6rem;
+                padding-right: 70px;
+                line-height: 1.2;
+            }
+            
+            header p {
+                font-size: 0.9rem;
+                padding-right: 70px;
+            }
+            
+            .cart-header {
+                top: 15px;
+                right: 10px;
+            }
+            
+            .cart-header button {
+                padding: 8px 10px;
+                font-size: 1rem;
+                min-width: 45px;
+                min-height: 35px;
+            }
+            
+            #cartCount {
+                min-width: 18px;
+                padding: 2px 5px;
+                font-size: 0.8rem;
+            }
+            
+            .content-section {
+                padding: 1rem 0.5rem;
+            }
+            
+            .menu-item {
+                padding: 0.8rem;
+            }
+            
+            .menu-item h3 {
+                font-size: 1.1rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .menu-item .price {
+                font-size: 1.2rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .menu-item button {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .cart-sidebar {
+                width: 95vw;
+                right: calc(-95vw);
+            }
+            
+            .cart-content {
+                padding: 1rem;
+            }
+            
+            form {
+                padding: 1rem 0.5rem;
+            }
+            
+            form input, form textarea {
+                padding: 10px;
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.6rem;
+                margin-bottom: 1rem;
+            }
+            
+            .checkout-btn {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+        }
+        
+        @media screen and (max-width: 360px) {
+            /* Extra small mobile styles */
+            header h1 {
+                font-size: 1.4rem;
+            }
+            
+            header p {
+                font-size: 0.8rem;
+            }
+            
+            .nav-tab {
+                padding: 0.8rem 0.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .menu-item img {
+                height: 150px;
+            }
+            
+            .section-title {
+                font-size: 1.4rem;
+            }
+        }
+        
+        /* Touch-friendly buttons */
+        @media (hover: none) and (pointer: coarse) {
+            .menu-item button, .checkout-btn, form button {
+                padding: 15px 25px;
+                font-size: 1.1rem;
+                min-height: 48px;
+            }
+            
+            .nav-tab {
+                padding: 1.2rem;
+                min-height: 48px;
+            }
+            
+            .cart-header button {
+                padding: 12px 15px;
+                min-height: 48px;
+                min-width: 48px;
+            }
+        }
+        
+        /* Landscape orientation fixes */
+        @media screen and (max-height: 500px) and (orientation: landscape) {
+            header {
+                padding: 1rem;
+                min-height: auto;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+                margin-bottom: 0.2rem;
+            }
+            
+            header p {
+                font-size: 0.9rem;
+            }
+            
+            .nav-tab {
+                padding: 0.8rem 1rem;
+            }
+            
+            .content-section {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Trixia's Bakery</h1>
+        <p>Freshly Baked Pastries Made with Love</p>
+        <div class="cart-header">
+            <span id="cartCount">0</span>
+            <button onclick="toggleCart()">🛒</button>
+        </div>
+    </header>
+
+    <ul class="nav">
+        <li class="nav-tab" data-section="menu" onclick="showSection('menu')">Menu</li>
+        <li class="nav-tab" data-section="checkout" onclick="showSection('checkout')">Checkout</li>
+        <li class="nav-tab guest-only" data-section="login" onclick="showSection('login')">Login</li>
+        <li class="nav-tab guest-only" data-section="createAccount" onclick="showSection('createAccount')">Create Account</li>
+        <li class="nav-tab admin-only" data-section="admin" onclick="showSection('admin')">Admin Panel</li>
+        <li class="nav-tab logged-in-only" data-section="logout" onclick="showSection('logout')">Logout</li>
+    </ul>
+
+    <section id="menu" class="content-section active">
+        <h2 class="section-title">Our Delicious Menu</h2>
+        <div class="menu-grid" id="menuGrid">
+            <!-- Menu items will be populated by JavaScript -->
+        </div>
+    </section>
+
+    <section id="checkout" class="content-section">
+        <h2 class="section-title">Complete Your Order</h2>
+        <div>
+            <h3>Order Summary</h3>
+            <div id="checkoutItems"></div>
+            <p id="checkoutTotal">Total: ₱0.00</p>
+        </div>
+        <form id="orderForm">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" required>
+            <label for="address">Delivery Address</label>
+            <textarea id="address" name="address" required></textarea>
+            <label for="instructions">Special Instructions</label>
+            <textarea id="instructions" name="instructions"></textarea>
+            <button type="submit">Place Order</button>
+        </form>
+        <div id="successMessage">
+            <h3>Order Placed Successfully!</h3>
+            <p>Thank you for choosing Trixia's Bakery. We'll contact you soon with order confirmation.</p>
+        </div>
+    </section>
+
+    <section id="login" class="content-section">
+        <h2 class="section-title">Login</h2>
+        <form id="loginForm">
+            <label for="username">Username</label>
+            <input type="text" id="username" required>
+            <label for="password">Password</label>
+            <input type="password" id="password" required>
+            <button type="submit">Login</button>
+        </form>
+    </section>
+
+    <section id="createAccount" class="content-section">
+        <h2 class="section-title">Create Account</h2>
+        <form id="createAccountForm">
+            <label for="newUsername">Username</label>
+            <input type="text" id="newUsername" required>
+            <label for="newPassword">Password</label>
+            <input type="password" id="newPassword" required>
+            <label for="createName">Full Name</label>
+            <input type="text" id="createName" required>
+            <label for="createEmail">Email</label>
+            <input type="email" id="createEmail" required>
+            <label for="createPhone">Phone Number</label>
+            <input type="tel" id="createPhone" required>
+            <label for="createAddress">Delivery Address</label>
+            <textarea id="createAddress" required></textarea>
+            <button type="submit">Create Account</button>
+        </form>
+    </section>
+
+    <section id="admin" class="content-section">
+        <h2 class="section-title">Admin Panel</h2>
+        <div class="admin-buttons">
+            <button onclick="loadOrders()">Refresh Orders</button>
+            <button onclick="clearOrders()">Clear All Orders</button>
+        </div>
+        <div id="orderList"></div>
+    </section>
+
+    <div id="cartSidebar" class="cart-sidebar">
+        <div class="cart-content">
+            <h2>Your Cart</h2>
+            <div id="cartItems">Your cart is empty</div>
+            <p id="cartTotal">Total: ₱0.00</p>
+            <button class="checkout-btn" onclick="goToCheckout()">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <footer style="background: linear-gradient(135deg, #2d3436 0%, #636e72 100%); color: white; padding: 3rem 0; margin-top: 4rem;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+                <div>
+                    <h3 style="color: #e8ddd4; margin-bottom: 1rem; font-size: 1.5rem;">Trixia's Bakery</h3>
+                    <p style="line-height: 1.6; margin-bottom: 1rem;">Freshly baked pastries made with love and the finest ingredients. Serving delicious treats since 2020.</p>
+                    <p style="color: #9b59b6; font-weight: bold;">Open Daily: 6:00 AM - 8:00 PM</p>
+                </div>
+                
+                <div>
+                    <h4 style="color: #e8ddd4; margin-bottom: 1rem;">Contact Information</h4>
+                    <div style="line-height: 1.8;">
+                        <p><strong>📍 Address:</strong><br>123 Baker Street, Pastry District<br>Manila, Philippines 1000</p>
+                        <p><strong>📞 Phone:</strong> +63 2 8123 4567</p>
+                        <p><strong>📱 Mobile:</strong> +63 917 123 4567</p>
+                        <p><strong>✉️ Email:</strong> hello@trixiasbakery.ph</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 style="color: #e8ddd4; margin-bottom: 1rem;">Follow Us</h4>
+                    <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                        <a href="#" style="color: white; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#e8ddd4'" onmouseout="this.style.color='white'">
+                            🔵 Facebook: @TrixiasBakeryPH
+                        </a>
+                        <a href="#" style="color: white; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#e8ddd4'" onmouseout="this.style.color='white'">
+                            📸 Instagram: @trixias_bakery
+                        </a>
+                        <a href="#" style="color: white; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#e8ddd4'" onmouseout="this.style.color='white'">
+                            🐦 Twitter: @TrixiasBakery
+                        </a>
+                        <a href="#" style="color: white; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#e8ddd4'" onmouseout="this.style.color='white'">
+                            📺 TikTok: @trixiasbakery
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 style="color: #e8ddd4; margin-bottom: 1rem;">Services</h4>
+                    <div style="line-height: 1.8;">
+                        <p>🚚 Free Delivery (Orders ₱500+)</p>
+                        <p>🎂 Custom Cakes & Pastries</p>
+                        <p>📅 Pre-orders Welcome</p>
+                        <p>🏢 Catering Services</p>
+                        <p>🎉 Event Planning</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="border-top: 1px solid #636e72; padding-top: 2rem; text-align: center;">
+                <p style="margin: 0; opacity: 0.8;">© 2024 Trixia's Bakery. All rights reserved. | Made with ❤️ in the Philippines</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let cart = [];
+        let orders = JSON.parse(localStorage.getItem('orders')) || [];
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+
+        // Expanded menu items with images
+        const menuItems = [
+            { id: 1, name: 'Classic Croissant', price: 125.00, image: 'https://images.unsplash.com/photo-1549931319-a545dcf3bc73?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80' },
+            { id: 2, name: 'French Baguette', price: 150.00, image: 'https://images.unsplash.com/photo-1549398458-4e71fa48d3c9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80' },
+            { id: 3, name: 'Artisan Sourdough', price: 200.00, image: 'https://images.unsplash.com/photo-1586444248902-2f64eddc13df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80' },
+            { id: 4, name: 'Blueberry Muffin', price: 100.00, image: 'https://images.unsplash.com/photo-1607958996333-41aef7caefaa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80' },
+            { id: 5, name: 'Blueberry Cheesecake', price: 350.00, image: 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80' },
+            { id: 6, name: 'Banana Bread', price: 180.00, image: 'https://images.unsplash.com/photo-1586985289906-406988974504?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80' },
+            { id: 7, name: 'Chocolate Chip Cookies', price: 80.00, image: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80' },
+            { id: 8, name: 'Strawberry Pie', price: 320.00, image: 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80' },
+            { id: 9, name: 'Egg Pie', price: 250.00, image: 'https://images.unsplash.com/photo-1571115764595-644a1f56a55c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80' },
+            { id: 10, name: 'Vanilla Cupcakes', price: 75.00, image: 'https://images.unsplash.com/photo-1587668178277-295251f900ce?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80' },
+            { id: 11, name: 'Mini Donuts', price: 60.00, image: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80' },
+            { id: 12, name: 'Espresso', price: 120.00, image: 'https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80' },
+            { id: 13, name: 'Cappuccino', price: 150.00, image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80' },
+            { id: 14, name: 'Iced Coffee', price: 140.00, image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80' },
+            { id: 15, name: 'Latte', price: 160.00, image: 'https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80' },
+            { id: 16, name: 'Mocha', price: 180.00, image: 'https://images.unsplash.com/photo-1485808191679-5f86510681a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80' },
+            { id: 17, name: 'Americano', price: 130.00, image: 'https://images.unsplash.com/photo-1497636577773-f1231844b336?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80' },
+            { id: 18, name: 'Macchiato', price: 170.00, image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=300&q=80' }
+        ];
+
+        // Populate menu
+        window.onload = function() {
+            const menuGrid = document.getElementById('menuGrid');
+            menuGrid.innerHTML = menuItems.map(item => `
+                <div class="menu-item">
+                    <img src="${item.image}" alt="${item.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjZmZlYWE3Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTIwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDAiIGZpbGw9IiNlMTcwNTUiPvCfjY4gPC90ZXh0Pgo8dGV4dCB4PSIyMDAiIHk9IjE3MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMmQzNDM2Ij5GcmVzaCBCYWtlcnkgSXRlbTwvdGV4dD4KPC9zdmc+Cg=='; this.style.backgroundColor='#ffeaa7'"
+                    <h3>${item.name}</h3>
+                    <p class="price">₱${item.price.toFixed(2)}</p>
+                    <button onclick="addToCart(${item.id})">Add to Cart</button>
+                </div>
+            `).join('');
+            updateCartDisplay();
+            updateNavigation();
+            showSection('menu');
+        };
+
+        // Add to cart
+        function addToCart(id) {
+            const item = menuItems.find(i => i.id === id);
+            const cartItem = cart.find(i => i.id === id);
+            if (cartItem) {
+                cartItem.quantity++;
+            } else {
+                cart.push({ ...item, quantity: 1 });
+            }
+            updateCartDisplay();
+        }
+
+        // Update cart display
+        function updateCartDisplay() {
+            const cartItems = document.getElementById('cartItems');
+            const cartTotal = document.getElementById('cartTotal');
+            const cartCount = document.getElementById('cartCount');
+            if (cart.length === 0) {
+                cartItems.innerHTML = 'Your cart is empty';
+                cartTotal.textContent = 'Total: ₱0.00';
+                cartCount.textContent = '0';
+                return;
+            }
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartTotal.textContent = `Total: ₱${totalPrice.toFixed(2)}`;
+            cartItems.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <span>${item.name} x ${item.quantity}</span>
+                    <span>₱${(item.price * item.quantity).toFixed(2)}</span>
+                    <button onclick="removeFromCart(${item.id})">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        // Remove from cart
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            updateCartDisplay();
+            updateCheckoutDisplay();
+        }
+
+        // Toggle cart sidebar
+        function toggleCart() {
+            const sidebar = document.getElementById('cartSidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        // Update navigation based on login status
+        function updateNavigation() {
+            const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+            const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                if (tab.classList.contains('guest-only')) {
+                    tab.style.display = isLoggedIn ? 'none' : 'block';
+                } else if (tab.classList.contains('logged-in-only')) {
+                    tab.style.display = isLoggedIn ? 'block' : 'none';
+                } else if (tab.classList.contains('admin-only')) {
+                    tab.style.display = isAdmin ? 'block' : 'none';
+                } else {
+                    tab.style.display = 'block';
+                }
+            });
+        }
+
+        // Show section
+        function showSection(sectionName) {
+            if (sectionName === 'logout') {
+                logout();
+                return;
+            }
+            if (sectionName === 'admin' && sessionStorage.getItem('isAdmin') !== 'true') {
+                alert('Access denied');
+                return;
+            }
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(sectionName).classList.add('active');
+            const clickedTab = document.querySelector(`.nav-tab[data-section="${sectionName}"]`);
+            if (clickedTab) clickedTab.classList.add('active');
+            if (sectionName === 'checkout') {
+                updateCheckoutDisplay();
+                prefillCheckoutForm();
+            } else if (sectionName === 'admin') {
+                loadOrders();
+            }
+        }
+
+        // Go to checkout
+        function goToCheckout() {
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            showSection('checkout');
+            toggleCart();
+        }
+
+        // Update checkout display
+        function updateCheckoutDisplay() {
+            const checkoutItems = document.getElementById('checkoutItems');
+            const checkoutTotal = document.getElementById('checkoutTotal');
+            if (cart.length === 0) {
+                checkoutItems.innerHTML = 'No items in cart';
+                checkoutTotal.textContent = 'Total: ₱0.00';
+                return;
+            }
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            checkoutItems.innerHTML = cart.map(item => `
+                <div>${item.name} x ${item.quantity} - ₱${(item.price * item.quantity).toFixed(2)}</div>
+            `).join('');
+            checkoutTotal.textContent = `Total: ₱${totalPrice.toFixed(2)}`;
+        }
+
+        // Prefill checkout form
+        function prefillCheckoutForm() {
+            const loggedInUser = sessionStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                const user = users.find(u => u.username === loggedInUser);
+                if (user) {
+                    document.getElementById('name').value = user.name;
+                    document.getElementById('email').value = user.email;
+                    document.getElementById('phone').value = user.phone;
+                    document.getElementById('address').value = user.address;
+                }
+            }
+        }
+
+        // Handle order form submission
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            const formData = new FormData(this);
+            const orderData = {
+                id: Date.now(),
+                timestamp: new Date().toLocaleString(),
+                customer: {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    address: formData.get('address'),
+                    instructions: formData.get('instructions')
+                },
+                username: sessionStorage.getItem('loggedInUser') || null,
+                items: [...cart],
+                total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+            };
+            orders.push(orderData);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            document.getElementById('successMessage').style.display = 'block';
+            this.style.display = 'none';
+            cart = [];
+            updateCartDisplay();
+            setTimeout(() => {
+                this.reset();
+                this.style.display = 'block';
+                document.getElementById('successMessage').style.display = 'none';
+                showSection('menu');
+            }, 3000);
+        });
+
+        // Load orders in admin panel
+        function loadOrders() {
+            const orderList = document.getElementById('orderList');
+            orderList.innerHTML = orders.map(order => `
+                <div class="order">
+                    <h3>Order #${order.id}</h3>
+                    <p>Date: ${order.timestamp}</p>
+                    ${order.username ? `<p>Username: ${order.username}</p>` : ''}
+                    <p>Customer: ${order.customer.name}</p>
+                    <p>Email: ${order.customer.email}</p>
+                    <p>Phone: ${order.customer.phone}</p>
+                    <p>Address: ${order.customer.address}</p>
+                    <p>Instructions: ${order.customer.instructions || 'None'}</p>
+                    <h4>Items:</h4>
+                    <ul>${order.items.map(item => `<li>${item.name} x ${item.quantity} - ₱${(item.price * item.quantity).toFixed(2)}</li>`).join('')}</ul>
+                    <p>Total: ₱${order.total.toFixed(2)}</p>
+                </div>
+            `).join('');
+        }
+
+        // Clear orders
+        function clearOrders() {
+            orders = [];
+            localStorage.setItem('orders', JSON.stringify(orders));
+            loadOrders();
+        }
+
+        // Handle account creation
+        document.getElementById('createAccountForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('newUsername').value.trim();
+            const password = document.getElementById('newPassword').value;
+            const name = document.getElementById('createName').value.trim();
+            const email = document.getElementById('createEmail').value.trim();
+            const phone = document.getElementById('createPhone').value.trim();
+            const address = document.getElementById('createAddress').value.trim();
+            if (users.some(user => user.username === username)) {
+                alert('Username already exists');
+                return;
+            }
+            users.push({ username, password, name, email, phone, address });
+            localStorage.setItem('users', JSON.stringify(users));
+            alert('Account created successfully! Please log in.');
+            showSection('login');
+        });
+
+        // Handle login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            if (username === 'admin' && password === 'admin123') {
+                sessionStorage.setItem('isLoggedIn', 'true');
+                sessionStorage.setItem('isAdmin', 'true');
+                updateNavigation();
+                showSection('menu');
+            } else {
+                const user = users.find(u => u.username === username && u.password === password);
+                if (user) {
+                    sessionStorage.setItem('isLoggedIn', 'true');
+                    sessionStorage.setItem('loggedInUser', username);
+                    sessionStorage.removeItem('isAdmin');
+                    updateNavigation();
+                    showSection('menu');
+                } else {
+                    alert('Invalid username or password');
+                }
+            }
+        });
+
+        // Logout
+        function logout() {
+            sessionStorage.clear();
+            updateNavigation();
+            showSection('menu');
+        }
+    </script>
+</body>
+</html>
