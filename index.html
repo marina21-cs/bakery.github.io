@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -459,241 +460,51 @@
                 gap: 0.5rem;
                 margin-bottom: 1.5rem;
             }
-            
-            footer {
-                margin-top: 2rem !important;
-                padding: 2rem 0 !important;
-            }
-            
-            footer div[style*="grid-template-columns"] {
-                grid-template-columns: 1fr !important;
-                gap: 1.5rem !important;
-                padding: 0 1rem !important;
-            }
-            
-            #checkoutItems {
-                margin-bottom: 1rem;
-                padding: 1rem;
-                background: #f8f9fa;
-                border-radius: 8px;
-            }
-            
-            #checkoutTotal {
-                font-size: 1.3rem;
-                font-weight: bold;
-                margin-bottom: 1.5rem;
-                text-align: center;
-                color: #8e44ad;
-            }
         }
-        
-        @media screen and (min-width: 769px) and (max-width: 1024px) {
-            header {
-                padding: 2rem;
-                min-height: 140px;
-            }
-            
-            header h1 {
-                font-size: 2.5rem;
-                padding-right: 100px;
-            }
-            
-            header p {
-                padding-right: 100px;
-            }
-            
-            .cart-header {
-                top: 25px;
-                right: 25px;
-            }
-            
-            .nav {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .nav-tab {
-                padding: 1rem 1.5rem;
-                flex: 0 1 auto;
-            }
-            
-            .content-section {
-                padding: 2rem;
-                max-width: 900px;
-                margin: 0 auto;
-            }
-            
-            .menu-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1.5rem;
-            }
-            
-            .menu-item img {
-                height: 200px;
-            }
-            
-            .cart-sidebar {
-                width: 380px;
-                right: -380px;
-            }
-            
-            footer div[style*="grid-template-columns"] {
-                grid-template-columns: repeat(2, 1fr) !important;
-                gap: 2rem !important;
-            }
+
+        /* Footer styles */
+        footer {
+            background: linear-gradient(135deg, #2d3436 0%, #636e72 100%);
+            color: white;
+            padding: 3rem 0 2rem 0;
+            margin-top: 4rem;
         }
-        
-        @media screen and (max-width: 480px) {
-            header {
-                padding: 1rem 0.5rem;
-                min-height: 100px;
-            }
-            
-            header h1 {
-                font-size: 1.6rem;
-                padding-right: 70px;
-                line-height: 1.2;
-            }
-            
-            header p {
-                font-size: 0.9rem;
-                padding-right: 70px;
-            }
-            
-            .cart-header {
-                top: 15px;
-                right: 10px;
-            }
-            
-            .cart-header button {
-                padding: 8px 10px;
-                font-size: 1rem;
-                min-width: 45px;
-                min-height: 35px;
-            }
-            
-            #cartCount {
-                min-width: 18px;
-                padding: 2px 5px;
-                font-size: 0.8rem;
-            }
-            
-            .content-section {
-                padding: 1rem 0.5rem;
-            }
-            
-            .menu-item {
-                padding: 0.8rem;
-            }
-            
-            .menu-item h3 {
-                font-size: 1.1rem;
-                margin-bottom: 0.5rem;
-            }
-            
-            .menu-item .price {
-                font-size: 1.2rem;
-                margin-bottom: 0.8rem;
-            }
-            
-            .menu-item button {
-                padding: 10px 15px;
-                font-size: 0.9rem;
-            }
-            
-            .cart-sidebar {
-                width: 95vw;
-                right: calc(-95vw);
-            }
-            
-            .cart-content {
-                padding: 1rem;
-            }
-            
-            form {
-                padding: 1rem 0.5rem;
-            }
-            
-            form input, form textarea {
-                padding: 10px;
-                font-size: 1rem;
-            }
-            
-            .section-title {
-                font-size: 1.6rem;
-                margin-bottom: 1rem;
-            }
-            
-            .checkout-btn {
-                padding: 12px 20px;
-                font-size: 1rem;
-            }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
-        
-        @media screen and (max-width: 360px) {
-            header h1 {
-                font-size: 1.4rem;
-            }
-            
-            header p {
-                font-size: 0.8rem;
-            }
-            
-            .nav-tab {
-                padding: 0.8rem 0.5rem;
-                font-size: 0.9rem;
-            }
-            
-            .menu-item img {
-                height: 150px;
-            }
-            
-            .section-title {
-                font-size: 1.4rem;
-            }
+
+        .footer-section h3 {
+            color: #74b9ff;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
         }
-        
-        @media (hover: none) and (pointer: coarse) {
-            .menu-item button, .checkout-btn, form button {
-                padding: 15px 25px;
-                font-size: 1.1rem;
-                min-height: 48px;
-            }
-            
-            .nav-tab {
-                padding: 1.2rem;
-                min-height: 48px;
-            }
-            
-            .cart-header button {
-                padding: 12px 15px;
-                min-height: 48px;
-                min-width: 48px;
-            }
+
+        .footer-section p {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
         }
-        
-        @media screen and (max-height: 500px) and (orientation: landscape) {
-            header {
-                padding: 1rem;
-                min-height: auto;
-            }
-            
-            header h1 {
-                font-size: 1.8rem;
-                margin-bottom: 0.2rem;
-            }
-            
-            header p {
-                font-size: 0.9rem;
-            }
-            
-            .nav-tab {
-                padding: 0.8rem 1rem;
-            }
-            
-            .content-section {
-                padding: 1rem;
-            }
+
+        .footer-section a {
+            color: #81ecec;
+            text-decoration: none;
+        }
+
+        .footer-section a:hover {
+            color: #00cec9;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #636e72;
+            color: #b2bec3;
         }
     </style>
 </head>
@@ -701,88 +512,89 @@
     <header>
         <h1>Trixia's Bakery</h1>
         <p>Freshly Baked Pastries Made with Love</p>
-        <div class="cart-icon">
-            <span id="cart-count">0</span>
-            <span>🛒</span>
+        <div class="cart-header">
+            <button onclick="toggleCart()">🛒</button>
+            <span id="cartCount">0</span>
         </div>
     </header>
 
     <nav>
-        <ul>
-            <li><a href="#menu">Menu</a></li>
-            <li><a href="#checkout">Checkout</a></li>
-            <li><a href="#login">Login</a></li>
-            <li><a href="#create-account">Create Account</a></li>
-            <li><a href="#admin-panel">Admin Panel</a></li>
-            <li><a href="#logout">Logout</a></li>
+        <ul class="nav">
+            <li class="nav-tab active" data-section="menu" onclick="showSection('menu')">Menu</li>
+            <li class="nav-tab guest-only" data-section="login" onclick="showSection('login')">Login</li>
+            <li class="nav-tab guest-only" data-section="create-account" onclick="showSection('create-account')">Create Account</li>
+            <li class="nav-tab" data-section="checkout" onclick="showSection('checkout')">Checkout</li>
+            <li class="nav-tab admin-only" data-section="admin" onclick="showSection('admin')">Admin Panel</li>
+            <li class="nav-tab logged-in-only" onclick="logout()">Logout</li>
         </ul>
     </nav>
 
-    <section id="menu">
-        <h2>Our Delicious Menu</h2>
-        <div class="menu-items">
-            <!-- Menu items will be dynamically populated -->
+    <section id="menu" class="content-section active">
+        <h2 class="section-title">Our Delicious Menu</h2>
+        <div class="menu-grid" id="menuGrid">
+            <!-- Menu items will be populated by JavaScript -->
         </div>
     </section>
 
-    <section id="checkout">
-        <h2>Complete Your Order</h2>
-        <div class="order-summary">
-            <h3>Order Summary</h3>
-            <div id="order-items"></div>
-            <p>Total: ₱<span id="order-total">0.00</span></p>
-        </div>
-        <form id="order-form">
-            <input type="text" id="full-name" placeholder="Full Name" required>
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="tel" id="phone" placeholder="Phone Number" required>
-            <textarea id="address" placeholder="Delivery Address" required></textarea>
-            <textarea id="instructions" placeholder="Special Instructions"></textarea>
+    <section id="checkout" class="content-section">
+        <h2 class="section-title">Complete Your Order</h2>
+        <div id="checkoutItems"></div>
+        <div id="checkoutTotal">Total: ₱0.00</div>
+        <form id="orderForm">
+            <input type="text" id="name" name="name" placeholder="Full Name" required>
+            <input type="email" id="email" name="email" placeholder="Email" required>
+            <input type="tel" id="phone" name="phone" placeholder="Phone Number" required>
+            <textarea id="address" name="address" placeholder="Delivery Address" required></textarea>
+            <textarea id="instructions" name="instructions" placeholder="Special Instructions"></textarea>
             <button type="submit">Place Order</button>
         </form>
-        <div id="order-confirmation" style="display: none;">
+        <div id="successMessage">
             <h3>Order Placed Successfully!</h3>
             <p>Thank you for choosing Trixia's Bakery. We'll contact you soon with order confirmation.</p>
         </div>
     </section>
 
-    <section id="login">
-        <h2>Login</h2>
-        <form id="login-form">
-            <input type="text" id="login-username" placeholder="Username" required>
-            <input type="password" id="login-password" placeholder="Password" required>
+    <section id="login" class="content-section">
+        <h2 class="section-title">Login</h2>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
             <button type="submit">Login</button>
         </form>
     </section>
 
-    <section id="create-account">
-        <h2>Create Account</h2>
-        <form id="create-account-form">
-            <input type="text" id="new-username" placeholder="Username" required>
-            <input type="password" id="new-password" placeholder="Password" required>
-            <input type="text" id="new-full-name" placeholder="Full Name" required>
-            <input type="email" id="new-email" placeholder="Email" required>
-            <input type="tel" id="new-phone" placeholder="Phone Number" required>
-            <textarea id="new-address" placeholder="Delivery Address" required></textarea>
+    <section id="create-account" class="content-section">
+        <h2 class="section-title">Create Account</h2>
+        <form id="createAccountForm">
+            <input type="text" id="newUsername" placeholder="Username" required>
+            <input type="password" id="newPassword" placeholder="Password" required>
+            <input type="text" id="createName" placeholder="Full Name" required>
+            <input type="email" id="createEmail" placeholder="Email" required>
+            <input type="tel" id="createPhone" placeholder="Phone Number" required>
+            <textarea id="createAddress" placeholder="Delivery Address" required></textarea>
             <button type="submit">Create Account</button>
         </form>
     </section>
 
-    <section id="admin-panel">
-        <h2>Admin Panel</h2>
-        <button id="refresh-orders">Refresh Orders</button>
-        <button id="clear-orders">Clear All Orders</button>
-        <div id="admin-orders"></div>
+    <section id="admin" class="content-section">
+        <h2 class="section-title">Admin Panel</h2>
+        <div class="admin-buttons">
+            <button onclick="loadOrders()">Refresh Orders</button>
+            <button onclick="clearOrders()">Clear All Orders</button>
+        </div>
+        <div id="orderList"></div>
     </section>
 
-    <aside id="cart">
-        <h2>Your Cart</h2>
-        <div id="cart-items">
-            <p>Your cart is empty</p>
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-content">
+            <h2>Your Cart</h2>
+            <div id="cartItems">
+                <p>Your cart is empty</p>
+            </div>
+            <div id="cartTotal">Total: ₱0.00</div>
+            <button class="checkout-btn" onclick="goToCheckout()">Proceed to Checkout</button>
         </div>
-        <p>Total: ₱<span id="cart-total">0.00</span></p>
-        <button id="proceed-to-checkout">Proceed to Checkout</button>
-    </aside>
+    </div>
 
     <footer>
         <div class="footer-content">
@@ -838,14 +650,13 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Make db accessible globally
+        // Make Firebase functions available globally
         window.db = db;
         window.firebaseAddDoc = addDoc;
         window.firebaseCollection = collection;
         window.firebaseGetDocs = getDocs;
     </script>
 
-    <!-- Your existing JavaScript (replace old Firebase initialization) -->
     <script>
         let cart = [];
         let orders = JSON.parse(localStorage.getItem('orders')) || [];
@@ -878,7 +689,7 @@
             const menuGrid = document.getElementById('menuGrid');
             menuGrid.innerHTML = menuItems.map(item => `
                 <div class="menu-item">
-                    <img src="${item.image}" alt="${item.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjZmZlYWE3Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTIwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDAiIGZpbGw9IiNlMTcwNTUiPvCfjY4gPC90ZXh0Pgo8dGV4dCB4PSIyMDAiIHk9IjE3MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMmQzNDM2Ij5GcmVzaCBCYWtlcnkgSXRlbTwvdGV4dD4KPC9zdmc+Cg=='; this.style.backgroundColor='#ffeaa7'"
+                    <img src="${item.image}" alt="${item.name}" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjZmZlYWE3Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTIwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNDAiIGZpbGw9IiNlMTcwNTUiPvCfjY4gPC90ZXh0Pgo8dGV4dCB4PSIyMDAiIHk9IjE3MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE4IiBmaWxsPSIjMmQzNDM2Ij5GcmVzaCBCYWtlcnkgSXRlbTwvdGV4dD4KPC9zdmc+Cg=='; this.style.backgroundColor='#ffeaa7'">
                     <h3>${item.name}</h3>
                     <p class="price">₱${item.price.toFixed(2)}</p>
                     <button onclick="addToCart(${item.id})">Add to Cart</button>
@@ -886,7 +697,6 @@
             `).join('');
             updateCartDisplay();
             updateNavigation();
-            showSection('menu');
         };
 
         // Add to cart
@@ -906,19 +716,24 @@
             const cartItems = document.getElementById('cartItems');
             const cartTotal = document.getElementById('cartTotal');
             const cartCount = document.getElementById('cartCount');
+            
             if (cart.length === 0) {
-                cartItems.innerHTML = 'Your cart is empty';
+                cartItems.innerHTML = '<p>Your cart is empty</p>';
                 cartTotal.textContent = 'Total: ₱0.00';
                 cartCount.textContent = '0';
                 return;
             }
+            
             const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
             cartTotal.textContent = `Total: ₱${totalPrice.toFixed(2)}`;
+            
             cartItems.innerHTML = cart.map(item => `
                 <div class="cart-item">
-                    <span>${item.name} x ${item.quantity}</span>
-                    <span>₱${(item.price * item.quantity).toFixed(2)}</span>
+                    <div>
+                        <div>${item.name} x ${item.quantity}</div>
+                        <div>₱${(item.price * item.quantity).toFixed(2)}</div>
+                    </div>
                     <button onclick="removeFromCart(${item.id})">Remove</button>
                 </div>
             `).join('');
@@ -941,6 +756,7 @@
         function updateNavigation() {
             const isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
             const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+            
             document.querySelectorAll('.nav-tab').forEach(tab => {
                 if (tab.classList.contains('guest-only')) {
                     tab.style.display = isLoggedIn ? 'none' : 'block';
@@ -956,23 +772,22 @@
 
         // Show section
         function showSection(sectionName) {
-            if (sectionName === 'logout') {
-                logout();
-                return;
-            }
             if (sectionName === 'admin' && sessionStorage.getItem('isAdmin') !== 'true') {
                 alert('Access denied');
                 return;
             }
+            
             document.querySelectorAll('.content-section').forEach(section => {
                 section.classList.remove('active');
             });
             document.querySelectorAll('.nav-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
+            
             document.getElementById(sectionName).classList.add('active');
             const clickedTab = document.querySelector(`.nav-tab[data-section="${sectionName}"]`);
             if (clickedTab) clickedTab.classList.add('active');
+            
             if (sectionName === 'checkout') {
                 updateCheckoutDisplay();
                 prefillCheckoutForm();
@@ -995,11 +810,13 @@
         function updateCheckoutDisplay() {
             const checkoutItems = document.getElementById('checkoutItems');
             const checkoutTotal = document.getElementById('checkoutTotal');
+            
             if (cart.length === 0) {
-                checkoutItems.innerHTML = 'No items in cart';
+                checkoutItems.innerHTML = '<p>No items in cart</p>';
                 checkoutTotal.textContent = 'Total: ₱0.00';
                 return;
             }
+            
             const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             checkoutItems.innerHTML = cart.map(item => `
                 <div>${item.name} x ${item.quantity} - ₱${(item.price * item.quantity).toFixed(2)}</div>
@@ -1013,21 +830,22 @@
             if (loggedInUser) {
                 const user = users.find(u => u.username === loggedInUser);
                 if (user) {
-                    document.getElementById('name').value = user.name;
-                    document.getElementById('email').value = user.email;
-                    document.getElementById('phone').value = user.phone;
-                    document.getElementById('address').value = user.address;
+                    document.getElementById('name').value = user.name || '';
+                    document.getElementById('email').value = user.email || '';
+                    document.getElementById('phone').value = user.phone || '';
+                    document.getElementById('address').value = user.address || '';
                 }
             }
         }
 
-        // Handle order form submission
-        document.getElementById('orderForm').addEventListener('submit', function(e) {
+        // Handle order form submission with Firebase
+        document.getElementById('orderForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             if (cart.length === 0) {
                 alert('Your cart is empty!');
                 return;
             }
+            
             const formData = new FormData(this);
             const orderData = {
                 id: Date.now(),
@@ -1043,26 +861,58 @@
                 items: [...cart],
                 total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
             };
-            orders.push(orderData);
-            localStorage.setItem('orders', JSON.stringify(orders));
-            document.getElementById('successMessage').style.display = 'block';
-            this.style.display = 'none';
-            cart = [];
-            updateCartDisplay();
-            setTimeout(() => {
-                this.reset();
-                this.style.display = 'block';
-                document.getElementById('successMessage').style.display = 'none';
-                showSection('menu');
-            }, 3000);
+
+            try {
+                // Save to Firebase
+                await window.firebaseAddDoc(window.firebaseCollection(window.db, 'orders'), orderData);
+                
+                // Also save to localStorage as backup
+                orders.push(orderData);
+                localStorage.setItem('orders', JSON.stringify(orders));
+                
+                document.getElementById('successMessage').style.display = 'block';
+                this.style.display = 'none';
+                cart = [];
+                updateCartDisplay();
+                
+                setTimeout(() => {
+                    this.reset();
+                    this.style.display = 'block';
+                    document.getElementById('successMessage').style.display = 'none';
+                    showSection('menu');
+                }, 3000);
+            } catch (error) {
+                console.error('Error saving order:', error);
+                alert('Error placing order. Please try again.');
+            }
         });
 
-        // Load orders in admin panel
-        function loadOrders() {
+        // Load orders from Firebase and localStorage
+        async function loadOrders() {
+            try {
+                // Try to load from Firebase first
+                const querySnapshot = await window.firebaseGetDocs(window.firebaseCollection(window.db, 'orders'));
+                const firebaseOrders = [];
+                querySnapshot.forEach((doc) => {
+                    firebaseOrders.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // Combine Firebase orders with localStorage orders
+                const allOrders = [...firebaseOrders, ...orders];
+                displayOrders(allOrders);
+            } catch (error) {
+                console.error('Error loading orders from Firebase:', error);
+                // Fallback to localStorage
+                displayOrders(orders);
+            }
+        }
+
+        // Display orders
+        function displayOrders(ordersToDisplay) {
             const orderList = document.getElementById('orderList');
-            orderList.innerHTML = orders.map(order => `
+            orderList.innerHTML = ordersToDisplay.map(order => `
                 <div class="order">
-                    <h3>Order #${order.id}</h3>
+                    <h3>Order #${order.id || order.timestamp}</h3>
                     <p>Date: ${order.timestamp}</p>
                     ${order.username ? `<p>Username: ${order.username}</p>` : ''}
                     <p>Customer: ${order.customer.name}</p>
@@ -1072,16 +922,18 @@
                     <p>Instructions: ${order.customer.instructions || 'None'}</p>
                     <h4>Items:</h4>
                     <ul>${order.items.map(item => `<li>${item.name} x ${item.quantity} - ₱${(item.price * item.quantity).toFixed(2)}</li>`).join('')}</ul>
-                    <p>Total: ₱${order.total.toFixed(2)}</p>
+                    <p><strong>Total: ₱${order.total.toFixed(2)}</strong></p>
                 </div>
             `).join('');
         }
 
         // Clear orders
         function clearOrders() {
-            orders = [];
-            localStorage.setItem('orders', JSON.stringify(orders));
-            loadOrders();
+            if (confirm('Are you sure you want to clear all orders?')) {
+                orders = [];
+                localStorage.setItem('orders', JSON.stringify(orders));
+                loadOrders();
+            }
         }
 
         // Handle account creation
@@ -1093,14 +945,17 @@
             const email = document.getElementById('createEmail').value.trim();
             const phone = document.getElementById('createPhone').value.trim();
             const address = document.getElementById('createAddress').value.trim();
+            
             if (users.some(user => user.username === username)) {
                 alert('Username already exists');
                 return;
             }
+            
             users.push({ username, password, name, email, phone, address });
             localStorage.setItem('users', JSON.stringify(users));
             alert('Account created successfully! Please log in.');
             showSection('login');
+            this.reset();
         });
 
         // Handle login
@@ -1108,11 +963,14 @@
             e.preventDefault();
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
+            
             if (username === 'admin' && password === 'admin123') {
                 sessionStorage.setItem('isLoggedIn', 'true');
                 sessionStorage.setItem('isAdmin', 'true');
+                sessionStorage.setItem('loggedInUser', 'admin');
                 updateNavigation();
                 showSection('menu');
+                alert('Welcome, Admin!');
             } else {
                 const user = users.find(u => u.username === username && u.password === password);
                 if (user) {
@@ -1121,10 +979,12 @@
                     sessionStorage.removeItem('isAdmin');
                     updateNavigation();
                     showSection('menu');
+                    alert(`Welcome, ${user.name}!`);
                 } else {
                     alert('Invalid username or password');
                 }
             }
+            this.reset();
         });
 
         // Logout
@@ -1132,6 +992,7 @@
             sessionStorage.clear();
             updateNavigation();
             showSection('menu');
+            alert('You have been logged out.');
         }
     </script>
 </body>
