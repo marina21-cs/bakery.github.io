@@ -294,11 +294,20 @@
             border-radius: 8px;
             font-size: 1rem;
             transition: border-color 0.3s ease;
+            margin-bottom: 1rem;
         }
         
         form input:focus, form textarea:focus {
             outline: none;
             border-color: #9b59b6;
+        }
+        
+        form input:invalid {
+            border-color: #e74c3c;
+        }
+        
+        form input:valid {
+            border-color: #27ae60;
         }
         
         form button {
@@ -819,7 +828,10 @@
             
             const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             checkoutItems.innerHTML = cart.map(item => `
-                <div>${item.name} x ${item.quantity} - ₱${(item.price * item.quantity).toFixed(2)}</div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; padding: 0.5rem; background: #f8f9fa; border-radius: 5px;">
+                    <span>${item.name} x ${item.quantity}</span>
+                    <span>₱${(item.price * item.quantity).toFixed(2)}</span>
+                </div>
             `).join('');
             checkoutTotal.textContent = `Total: ₱${totalPrice.toFixed(2)}`;
         }
@@ -838,13 +850,32 @@
             }
         }
 
-        // Handle order form submission with Firebase
-        document.getElementById('orderForm').addEventListener('submit', async function(e) {
+        // Handle order form submission
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            // Validate cart
             if (cart.length === 0) {
                 alert('Your cart is empty!');
                 return;
             }
+            
+            // Validate form fields
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const address = document.getElementById('address').value.trim();
+            
+            if (!name || !email || !phone || !address) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // Disable form during submission
+            const submitButton = this.querySelector('button[type="submit"]');
+            const originalText = submitButton.textContent;
+            submitButton.disabled = true;
+            submitButton.textContent = 'Processing...';
             
             const formData = new FormData(this);
             const orderData = {
@@ -855,55 +886,88 @@
                     email: formData.get('email'),
                     phone: formData.get('phone'),
                     address: formData.get('address'),
-                    instructions: formData.get('instructions')
+                    instructions: formData.get('instructions') || ''
                 },
                 username: sessionStorage.getItem('loggedInUser') || null,
                 items: [...cart],
                 total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)
             };
 
-            try {
-                // Save to Firebase
-                await window.firebaseAddDoc(window.firebaseCollection(window.db, 'orders'), orderData);
-                
-                // Also save to localStorage as backup
-                orders.push(orderData);
-                localStorage.setItem('orders', JSON.stringify(orders));
-                
-                document.getElementById('successMessage').style.display = 'block';
-                this.style.display = 'none';
-                cart = [];
-                updateCartDisplay();
-                
-                setTimeout(() => {
-                    this.reset();
-                    this.style.display = 'block';
-                    document.getElementById('successMessage').style.display = 'none';
-                    showSection('menu');
-                }, 3000);
-            } catch (error) {
-                console.error('Error saving order:', error);
-                alert('Error placing order. Please try again.');
+            // Save to localStorage immediately (primary storage)
+            orders.push(orderData);
+            localStorage.setItem('orders', JSON.stringify(orders));
+            console.log('Order saved to localStorage successfully');
+            
+            // Try to save to Firebase in background (non-blocking)
+            if (window.db && window.firebaseAddDoc && window.firebaseCollection) {
+                window.firebaseAddDoc(window.firebaseCollection(window.db, 'orders'), orderData)
+                    .then((docRef) => {
+                        console.log('Order also saved to Firebase with ID:', docRef.id);
+                    })
+                    .catch((firebaseError) => {
+                        console.warn('Firebase save failed (order still saved locally):', firebaseError);
+                    });
             }
+            
+            // Success - show message and reset immediately
+            document.getElementById('successMessage').style.display = 'block';
+            this.style.display = 'none';
+            cart = [];
+            updateCartDisplay();
+            updateCheckoutDisplay();
+            
+            // Reset form and redirect after delay
+            setTimeout(() => {
+                this.reset();
+                this.style.display = 'block';
+                document.getElementById('successMessage').style.display = 'none';
+                submitButton.disabled = false;
+                submitButton.textContent = originalText;
+                showSection('menu');
+            }, 3000);
         });
 
         // Load orders from Firebase and localStorage
-        async function loadOrders() {
-            try {
-                // Try to load from Firebase first
-                const querySnapshot = await window.firebaseGetDocs(window.firebaseCollection(window.db, 'orders'));
-                const firebaseOrders = [];
-                querySnapshot.forEach((doc) => {
-                    firebaseOrders.push({ id: doc.id, ...doc.data() });
-                });
-                
-                // Combine Firebase orders with localStorage orders
-                const allOrders = [...firebaseOrders, ...orders];
-                displayOrders(allOrders);
-            } catch (error) {
-                console.error('Error loading orders from Firebase:', error);
-                // Fallback to localStorage
-                displayOrders(orders);
+        function loadOrders() {
+            // Always load localStorage orders first (primary storage)
+            const localOrders = JSON.parse(localStorage.getItem('orders')) || [];
+            orders = localOrders; // Update global orders array
+            
+            // Display localStorage orders immediately
+            displayOrders(localOrders);
+            console.log(`Displaying ${localOrders.length} orders from localStorage`);
+            
+            // Try to load from Firebase in background (optional)
+            if (window.db && window.firebaseGetDocs && window.firebaseCollection) {
+                window.firebaseGetDocs(window.firebaseCollection(window.db, 'orders'))
+                    .then((querySnapshot) => {
+                        const firebaseOrders = [];
+                        querySnapshot.forEach((doc) => {
+                            firebaseOrders.push({ firebaseId: doc.id, ...doc.data() });
+                        });
+                        console.log(`Loaded ${firebaseOrders.length} orders from Firebase successfully`);
+                        
+                        // Combine and remove duplicates based on timestamp and total
+                        const allOrders = [...localOrders];
+                        firebaseOrders.forEach(fbOrder => {
+                            const isDuplicate = localOrders.some(localOrder => 
+                                localOrder.timestamp === fbOrder.timestamp && 
+                                localOrder.total === fbOrder.total
+                            );
+                            if (!isDuplicate) {
+                                allOrders.push(fbOrder);
+                            }
+                        });
+                        
+                        // Update display with combined orders
+                        if (allOrders.length > localOrders.length) {
+                            displayOrders(allOrders);
+                            console.log(`Updated display with ${allOrders.length} total orders`);
+                        }
+                    })
+                    .catch((error) => {
+                        console.warn('Error loading orders from Firebase (using localStorage only):', error);
+                    });
             }
         }
 
