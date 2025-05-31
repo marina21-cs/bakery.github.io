@@ -985,7 +985,7 @@ if (window.db && window.firebaseAddDoc && window.firebaseCollection) {
         function clearOrders() {
             if (confirm('Are you sure you want to clear all orders?')) {
                 orders = [];
-                localStorage.setItem('orders', JSON.stringify(orders));
+                // removed localStorage fallback - now using Firebase only
                 loadOrders();
             }
         }
