@@ -894,9 +894,17 @@
             };
 
             // Save to localStorage immediately (primary storage)
-            orders.push(orderData);
-            localStorage.setItem('orders', JSON.stringify(orders));
-            console.log('Order saved to localStorage successfully');
+            // Save to Firebase only
+if (window.db && window.firebaseAddDoc && window.firebaseCollection) {
+    window.firebaseAddDoc(window.firebaseCollection(window.db, 'orders'), orderData)
+        .then(() => {
+            console.log('Order saved to Firebase');
+        })
+        .catch((firebaseError) => {
+            console.warn('Firebase save failed:', firebaseError);
+            alert('Could not save order. Please check your internet or try again.');
+        });
+}
             
             // Try to save to Firebase in background (non-blocking)
             if (window.db && window.firebaseAddDoc && window.firebaseCollection) {
@@ -929,49 +937,31 @@
 
         // Load orders from Firebase and localStorage
         function loadOrders() {
-            // Always load localStorage orders first (primary storage)
-            const localOrders = JSON.parse(localStorage.getItem('orders')) || [];
-            orders = localOrders; // Update global orders array
-            
-            // Display localStorage orders immediately
-            displayOrders(localOrders);
-            console.log(`Displaying ${localOrders.length} orders from localStorage`);
-            
-            // Try to load from Firebase in background (optional)
-            if (window.db && window.firebaseGetDocs && window.firebaseCollection) {
-                window.firebaseGetDocs(window.firebaseCollection(window.db, 'orders'))
-                    .then((querySnapshot) => {
-                        const firebaseOrders = [];
-                        querySnapshot.forEach((doc) => {
-                            firebaseOrders.push({ firebaseId: doc.id, ...doc.data() });
-                        });
-                        console.log(`Loaded ${firebaseOrders.length} orders from Firebase successfully`);
-                        
-                        // Combine and remove duplicates based on timestamp and total
-                        const allOrders = [...localOrders];
-                        firebaseOrders.forEach(fbOrder => {
-                            const isDuplicate = localOrders.some(localOrder => 
-                                localOrder.timestamp === fbOrder.timestamp && 
-                                localOrder.total === fbOrder.total
-                            );
-                            if (!isDuplicate) {
-                                allOrders.push(fbOrder);
-                            }
-                        });
-                        
-                        // Update display with combined orders
-                        if (allOrders.length > localOrders.length) {
-                            displayOrders(allOrders);
-                            console.log(`Updated display with ${allOrders.length} total orders`);
-                        }
-                    })
-                    .catch((error) => {
-                        console.warn('Error loading orders from Firebase (using localStorage only):', error);
-                    });
-            }
-        }
-//setup initial state
-        // Display orders
+    if (!window.db || !window.firebaseGetDocs || !window.firebaseCollection) {
+        console.error("Firebase not initialized");
+        return;
+    }
+
+    window.firebaseGetDocs(window.firebaseCollection(window.db, 'orders'))
+        .then((querySnapshot) => {
+            const firebaseOrders = [];
+            querySnapshot.forEach((doc) => {
+                firebaseOrders.push({ id: doc.id, ...doc.data() });
+            });
+
+            // Sort orders by timestamp (latest first)
+            firebaseOrders.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            displayOrders(firebaseOrders);
+            console.log(`Loaded and displayed ${firebaseOrders.length} orders from Firestore.`);
+        })
+        .catch((error) => {
+            console.error('Failed to load orders from Firestore:', error);
+            alert("Unable to load orders. Check internet or Firebase setup.");
+        });
+}
+
+// Display orders
         function displayOrders(ordersToDisplay) {
             const orderList = document.getElementById('orderList');
             orderList.innerHTML = ordersToDisplay.map(order => `
